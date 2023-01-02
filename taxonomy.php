@@ -2,7 +2,7 @@
 
 $taxonomy = $args[0];
 if( empty( $taxonomy ) )
-  WP_CLI::error( '🚨 Please provide a taxonomy as the first argument when calling this file.' );
+  WP_CLI::error( '🚨 Please provide a taxonomy as the first argument when calling this file. Examples: ' . "\n- donation_option\n- pickup_location\n- pickup_times\n- screening_questions" );
 
 if( ! taxonomy_exists( $taxonomy ) )
   WP_CLI::error( '🚨 No taxonomy found for `' . $taxonomy . '`!');
@@ -29,14 +29,13 @@ foreach( $terms as $term ){
     'name'        => $term->name,
     'slug'        => $term->slug,
     'taxonomy'    => $taxonomy,
-    'description' => $term->description,
+    'description' => str_replace( [ "\r", "\n" ], '', $term->description ),
   ];
-
-  $pod = pods( $taxonomy );
-  $pod->fetch( $term->term_id );
 
   switch( $taxonomy ){
     case 'donation_option':
+      $pod = pods( $taxonomy );
+      $pod->fetch( $term->term_id );
       $data[ $counter ]['skip_questions'] = $pod->field( 'skip_questions' );
       $data[ $counter ]['pickup'] = $pod->field( 'pickup' );
       // Add extra column headings
@@ -53,7 +52,7 @@ foreach( $terms as $term ){
 }
 
 WP_CLI::line( '🔔 $data = ' . print_r( $data, true ) );
-$fp = fopen( $taxonomy . '.csv', 'w' );
+$fp = fopen( trailingslashit( dirname( __FILE__ ) ) . 'exports/' . $taxonomy . '.csv', 'w' );
 foreach( $data as $fields ){
   fputcsv( $fp, $fields );
 }
