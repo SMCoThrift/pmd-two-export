@@ -87,13 +87,17 @@ foreach( $organizations as $org ){
   if( is_array( $standard_banner ) && array_key_exists( 'guid', $standard_banner ) )
     $realtor_ad_standard_banner = $standard_banner['guid'];
 
+  $contact_emails = get_post_meta( $org->ID, 'contact_emails', true );
+  if( is_string( $contact_emails ) )
+    $contact_emails = explode( "\n", $contact_emails );
+
 
   $data[ $counter ] = [
     'post_title'                  => $org->post_title,
     'post_name'                   => $org->post_name,
     'post_content'                => str_replace( [ "\r", "\n" ], '', $org->post_content ),
     'post_status'                 => $org->post_status,
-    'contact_emails'              => strip_tags( get_post_meta( $org->ID, 'contact_emails', true ) ),
+    'contact_emails'              => str_replace( [ "\r", "\n" ], '', implode( ',', $contact_emails ) ),
     'website'                     => get_post_meta( $org->ID, 'website', true ),
     'priority_pickup'             => (bool) get_post_meta( $org->ID, 'priority_pickup', true ), // Will be either `1` or empty
     'donation_routing'            => get_post_meta( $org->ID, 'donation_routing', true ),
