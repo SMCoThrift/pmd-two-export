@@ -95,7 +95,7 @@ foreach( $organizations as $org ){
   $data[ $counter ] = [
     'post_title'                  => $org->post_title,
     'post_name'                   => $org->post_name,
-    'post_content'                => str_replace( [ "\r", "\n" ], '', $org->post_content ),
+    'post_content'                => str_replace( [ "\r", "\n" ], '<br>', $org->post_content ),
     'post_status'                 => $org->post_status,
     'contact_emails'              => str_replace( [ "\r", "\n" ], '', implode( ',', $contact_emails ) ),
     'website'                     => get_post_meta( $org->ID, 'website', true ),
