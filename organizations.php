@@ -17,25 +17,26 @@ $column_headings = [
   1 => 'post_name',
   2 => 'post_content',
   3 => 'post_status',
-  4 => 'contact_emails',
-  5 => 'website',
-  6 => 'priority_pickup',
-  7 => 'donation_routing',
-  8 => 'skip_pickup_dates',
-  9 => 'pickup_days',
-  10 => 'minimum_scheduling_interval',
-  11  => 'step_one_note',
-  12  => 'provide_additional_details',
-  13  => 'allow_user_photo_uploads',
-  14  => 'pause_pickups',
-  15  => 'realtor_ad_standard_banner', // Need to handle media files
-  16  => 'realtor_ad_medium_banner', // Need to handle media files
-  17  => 'realtor_ad_link',
-  18  => 'realtor_description',
-  19  => 'pickup_locations', // Taxonomy options need to be available before importing
-  20  => 'donation_options', // Taxonomy options need to be available before importing
-  21  => 'pickup_times', // Taxonomy options need to be available before importing
-  22  => 'screening_questions', // Taxonomy options need to be available before importing
+  4 => 'post_thumbnail',
+  5 => 'contact_emails',
+  6 => 'website',
+  7 => 'priority_pickup',
+  8 => 'donation_routing',
+  9 => 'skip_pickup_dates',
+  10 => 'pickup_days',
+  11 => 'minimum_scheduling_interval',
+  12  => 'step_one_note',
+  13  => 'provide_additional_details',
+  14  => 'allow_user_photo_uploads',
+  15  => 'pause_pickups',
+  16  => 'realtor_ad_standard_banner', // Need to handle media files
+  17  => 'realtor_ad_medium_banner', // Need to handle media files
+  18  => 'realtor_ad_link',
+  19  => 'realtor_description',
+  20  => 'pickup_locations', // Taxonomy options need to be available before importing
+  21  => 'donation_options', // Taxonomy options need to be available before importing
+  22  => 'pickup_times', // Taxonomy options need to be available before importing
+  23  => 'screening_questions', // Taxonomy options need to be available before importing
 ];
 $data[ $counter ] = $column_headings;
 $counter++;
@@ -91,12 +92,15 @@ foreach( $organizations as $org ){
   if( is_string( $contact_emails ) )
     $contact_emails = explode( "\n", $contact_emails );
 
+  $thumbnail_url = get_the_post_thumbnail_url( $org->ID, 'full' );
+  $post_thumbnail_url = ( ! empty( $thumbnail_url ) )? 'https://pickupmydonation.com' . $thumbnail_url : '';
 
   $data[ $counter ] = [
     'post_title'                  => $org->post_title,
     'post_name'                   => $org->post_name,
     'post_content'                => str_replace( [ "\r", "\n" ], '<br>', $org->post_content ),
     'post_status'                 => $org->post_status,
+    'post_thumbnail'              => $post_thumbnail_url,
     'contact_emails'              => str_replace( [ "\r", "\n" ], '', implode( ',', $contact_emails ) ),
     'website'                     => get_post_meta( $org->ID, 'website', true ),
     'priority_pickup'             => (bool) get_post_meta( $org->ID, 'priority_pickup', true ), // Will be either `1` or empty
