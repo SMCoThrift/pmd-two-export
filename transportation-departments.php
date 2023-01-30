@@ -39,7 +39,7 @@ foreach( $trans_depts as $trans_dept ){
   $pod->fetch( $trans_dept->ID );
 
   $org = get_post_meta( $trans_dept->ID, 'organization', true );
-  $org_post_title = $org['post_title'];
+  $org_post_title = ( is_array( $org ) && array_key_exists( 'post_title', $org ) )? $org['post_title'] : '' ;
 
   $pickup_codes = [];
   $terms = wp_get_post_terms( $trans_dept->ID, 'pickup_code' );
