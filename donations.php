@@ -45,9 +45,16 @@ $data[] = [
 ];
 if( $donations ):
   foreach( $donations as $donation ){
+    $org_post_title = '';
+    $org_post_name = '';
+
     $org = get_post_meta( $donation->ID, 'organization', true );
-    $org_post_title = ( array_key_exists( 'post_title', $org ) )? $org['post_title'] : '' ;
-    $org_post_name = ( array_key_exists( 'post_name', $org ) )? $org['post_name'] : '' ;
+    if( is_string( $org ) ){
+      WP_CLI::line( '🔔🔔🔔 $org is a string = ' . $org );
+    } else {
+      $org_post_title = ( array_key_exists( 'post_title', $org ) )? $org['post_title'] : '' ;
+      $org_post_name = ( array_key_exists( 'post_name', $org ) )? $org['post_name'] : '' ;
+    }
 
     $pickup_codes = wp_get_post_terms( $donation->ID, 'pickup_code', [ 'fields' => 'names' ] );
     $pickup_code = implode( ', ', $pickup_codes );
