@@ -34,6 +34,7 @@ $donations = get_posts( $query_args );
 $data = [];
 $data[] = [
   'post_title',
+  'post_name',
   'organization',
   'pickup_code',
   'pickup_description',
@@ -43,8 +44,9 @@ if( $donations ):
   foreach( $donations as $donation ){
     $org = get_post_meta( $donation->ID, 'organization', true );
     $org_id = ( is_array( $org ) && array_key_exists( 'ID', $org ) )? $org['ID'] : null ;
-    WP_CLI::line('🔔 $org_id = ' . $org_id );
-    $organization = ( is_numeric( $org_id ) )? get_the_title( $org_id ) : null ;
+    WP_CLI::line('🔔 Organization= ' . $org['post_title'] );
+    $organization = ( array_key_exists( 'post_title', $org ) )? $org['post_title'] : null ;
+    $org_post_name = $org['post_name'];
 
     $pickup_codes = wp_get_post_terms( $donation->ID, 'pickup_code', [ 'fields' => 'names' ] );
     $pickup_code = implode( ', ', $pickup_codes );
@@ -55,7 +57,9 @@ if( $donations ):
 
     $data[] = [
       'post_title'          => $donation->post_title,
+      'post_name'           => $donation->post_name,
       'organization'        => $organization,
+      'org_post_name'       => $org_post_name,
       'pickup_code'         => $pickup_code,
       'pickup_description'  => str_replace( ["\n","\r"], "", $pickup_description ),
       'date'                => $date,
