@@ -19,8 +19,9 @@ if( 3 != count( $end_date_array ) )
   WP_CLI::error( '🚨  end_date must be in YYYY-MM-DD format.' );
 
 $query_args = [
-  'post_type'     => 'donation',
+  'post_type'   => 'donation',
   'numberposts' => -1,
+  'post_status' => 'publish',
   'date_query'    => [
     'after'     => $start_date,
     'before'    => $end_date,
@@ -45,7 +46,7 @@ $data[] = [
 if( $donations ):
   foreach( $donations as $donation ){
     $org = get_post_meta( $donation->ID, 'organization', true );
-    WP_CLI::line('🔔 Organization= ' . $org['post_title'] );
+    WP_CLI::line('🔔 Organization = ' . $org['post_title'] );
 
     $pickup_codes = wp_get_post_terms( $donation->ID, 'pickup_code', [ 'fields' => 'names' ] );
     $pickup_code = implode( ', ', $pickup_codes );
