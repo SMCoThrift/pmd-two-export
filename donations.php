@@ -39,7 +39,7 @@ $data[] = [
   'org_post_name',
   'pickup_code',
   'pickup_description',
-  'date',
+  'post_date',
   'post_status',
 ];
 if( $donations ):
