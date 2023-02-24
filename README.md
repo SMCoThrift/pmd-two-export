@@ -4,6 +4,10 @@ Exports PMD 2.0 data.
 
 ## Changelog
 
+### 1.2.0
+
+- Adding by-pass link generator.
+
 ### 1.1.0
 
 - Exporting donations.
