@@ -42,6 +42,15 @@ $data[] = [
   'pickup_description',
   'post_date',
   'post_status',
+  'donor_name',
+  'donor_company',
+  'donor_address',
+  'donor_city',
+  'donor_state',
+  'donor_zip',
+  'donor_phone',
+  'donor_email',
+  'referrer',
 ];
 if( $donations ):
   foreach( $donations as $donation ){
@@ -61,15 +70,37 @@ if( $donations ):
 
       $pickup_description = get_post_meta( $donation->ID, 'pickup_description', true );
 
+      $custom_fields = get_post_custom( $donation->ID );
+      $donor_company = ( ! isset( $custom_fields['donor_company'][0] ) )? '' : $custom_fields['donor_company'][0];
+      $DonationAddress = ( empty( $custom_fields['pickup_address'][0] ) )? $custom_fields['donor_address'][0] : $custom_fields['pickup_address'][0];
+      $DonationCity = ( empty( $custom_fields['pickup_city'][0] ) )? $custom_fields['donor_city'][0] : $custom_fields['pickup_city'][0];
+      $DonationState = ( empty( $custom_fields['pickup_state'][0] ) )? $custom_fields['donor_state'][0] : $custom_fields['pickup_state'][0];
+      $DonationZip = ( empty( $custom_fields['pickup_zip'][0] ) )? $custom_fields['donor_zip'][0] : $custom_fields['pickup_zip'][0];
+      $organization = $custom_fields['organization'][0];
+      $PickupDate1 = ( ! empty( $custom_fields['pickupdate1'][0] ) )? $custom_fields['pickupdate1'][0] : '';
+      $PickupDate2 = ( ! empty( $custom_fields['pickupdate2'][0] ) )? $custom_fields['pickupdate2'][0] : '';
+      $PickupDate3 = ( ! empty( $custom_fields['pickupdate3'][0] ) )? $custom_fields['pickupdate3'][0] : '';
+      $org_name = ( is_numeric( $organization ) )? get_the_title( $organization ) : '--';
+      $Referer = ( ! empty( $custom_fields['referer'][0] ) )? esc_url( $custom_fields['referer'][0] ) : '';
+
       $row = [
         'post_title'          => $donation->post_title,
         'post_name'           => $donation->post_name,
         'org_post_title'      => $org_post_title,
         'org_post_name'       => $org_post_name,
         'pickup_code'         => $pickup_code,
-        'pickup_description'  => str_replace( ["\n","\r"], "", $pickup_description ),
+        'pickup_description'  => str_replace( ["\n","\r"], "", strip_tags( $pickup_description ) ),
         'post_date'           => $donation->post_date,
         'post_status'         => $donation->post_status,
+        'donor_name'          => $custom_fields['donor_name'][0],
+        'donor_company'       => $donor_company,
+        'donor_address'       => $DonationAddress,
+        'donor_city'          => $DonationCity,
+        'donor_state'         => $DonationState,
+        'donor_zip'           => $DonationZip,
+        'donor_phone'         => $custom_fields['donor_phone'][0],
+        'donor_email'         => $custom_fields['donor_email'][0],
+        'referrer'            => $Referer,
       ];
       $data[] = $row;
 
